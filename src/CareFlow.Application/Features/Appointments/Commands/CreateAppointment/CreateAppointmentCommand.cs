@@ -1,4 +1,5 @@
 using CareFlow.Application.Common.Interfaces;
+using CareFlow.Domain.Interfaces;
 using CareFlow.Application.DTOs.Appointments;
 using CareFlow.Domain.Entities;
 using CareFlow.Domain.ValueObjects;
