@@ -1,7 +1,7 @@
 # CareFlow – Clinical Documentation & Scheduling API
 ## Overview
 
-CareFlow is a TherapyNotes-inspired backend platform designed for clinical scheduling, SOAP documentation, audit logging, and secure operational workflows. The system is built with **.NET 8**, follows **Clean Architecture principles**, and is **Dockerized** for development and deployment.
+CareFlow is a full-stack clinical management platform designed for therapy practices. It features a robust **.NET 8 Web API** backend following Clean Architecture principles and a modern **React + TypeScript** frontend. The system handles clinical scheduling, SOAP documentation, audit logging, and secure operational workflows.
 
 This project demonstrates:
 
@@ -67,6 +67,21 @@ This project demonstrates:
 
 ---
 
+## Screenshots
+
+### Dashboard
+![Dashboard](./screenshots/dashboard.png)
+
+### Patients Management
+![Patients List](./screenshots/patients.png)
+![New Patient Modal](./screenshots/new_patient.png)
+
+### Appointment Scheduling
+![Appointments List](./screenshots/appointments.png)
+![Schedule Appointment](./screenshots/schedule_appointment.png)
+
+---
+
 ## Getting Started
 
 ### Prerequisites
@@ -94,9 +109,16 @@ docker compose up --build
 
 3. The services will be available at:
 
-* API: `http://localhost:8080/swagger`
-* PostgreSQL: `localhost:5432` (user: `postgres`, password: `postgres`)
-* Hangfire Dashboard: `http://localhost:8080/hangfire` (Admin role required)
+* **Frontend (React):** `http://localhost:3000`
+* **API (Swagger):** `http://localhost:8080/swagger`
+* **PostgreSQL:** `localhost:5432` (user: `postgres`, password: `postgres`)
+* **Hangfire Dashboard:** `http://localhost:8080/hangfire` (Admin role required)
+
+### Default Login
+The system is seeded with a demo admin user:
+* **Email:** `admin@demo.com`
+* **Password:** `DemoPassword123!`
+* **Note:** You can also use the "Demo Login" button on the login page.
 
 ---
 
@@ -136,7 +158,8 @@ CareFlow/
 │   ├── CareFlow.Domain/
 │   ├── CareFlow.Application/
 │   ├── CareFlow.Infrastructure/
-│   └── CareFlow.Api/
+│   ├── CareFlow.Api/
+│   └── CareFlow.Web/          # React Frontend
 ├── tests/
 ├── Dockerfile
 ├── docker-compose.yml
@@ -156,6 +179,8 @@ CareFlow/
 
 ## Technologies Used
 
+* **React + TypeScript (Vite)**
+* **Vanilla CSS Modules**
 * **.NET 8 (C#)**
 * **Entity Framework Core**
 * **PostgreSQL**
