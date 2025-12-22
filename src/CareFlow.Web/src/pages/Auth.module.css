@@ -1,0 +1,51 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: var(--color-background);
+    padding: var(--spacing-md);
+}
+
+.authCard {
+    width: 100%;
+    max-width: 400px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.row {
+    display: flex;
+    gap: var(--spacing-md);
+}
+
+.submitBtn {
+    margin-top: var(--spacing-sm);
+    width: 100%;
+}
+
+.error {
+    color: var(--color-destructive);
+    font-size: 0.875rem;
+    text-align: center;
+}
+
+.footer {
+    margin-top: var(--spacing-lg);
+    text-align: center;
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+}
+
+.footer a {
+    color: var(--color-primary);
+    font-weight: 500;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
