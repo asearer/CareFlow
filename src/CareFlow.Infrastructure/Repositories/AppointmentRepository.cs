@@ -23,6 +23,14 @@ public class AppointmentRepository : IAppointmentRepository
             .FirstOrDefaultAsync(a => a.Id == id, cancellationToken);
     }
 
+    public async Task<IEnumerable<Appointment>> GetAllAsync(CancellationToken cancellationToken)
+    {
+        return await _context.Appointments
+            .Include(a => a.Patient)
+            .Include(a => a.Therapist)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<IEnumerable<Appointment>> GetOverlappingAppointmentsAsync(Guid therapistId, DateRange range, CancellationToken cancellationToken)
     {
         return await _context.Appointments

@@ -1,0 +1,86 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.patientInfo p {
+    margin: var(--spacing-xs) 0;
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+}
+
+.empty {
+    text-align: center;
+    color: var(--color-text-muted);
+    grid-column: 1 / -1;
+    padding: var(--spacing-xl);
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.row {
+    display: flex;
+    gap: var(--spacing-md);
+}
+
+.row>* {
+    flex: 1;
+}
+
+.formActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-md);
+}
+
+.error {
+    color: var(--color-error);
+    background: #fee2e2;
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-sm);
+}
+
+/* Select Styles */
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--color-text);
+}
+
+.select {
+    padding: 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    background-color: var(--color-surface);
+    color: var(--color-text);
+}
+
+.select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-primary-light);
+}

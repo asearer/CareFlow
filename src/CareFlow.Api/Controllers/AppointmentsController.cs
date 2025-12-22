@@ -25,4 +25,11 @@ public class AppointmentsController : ControllerBase
         var id = await _mediator.Send(command);
         return CreatedAtAction(nameof(Create), new { id }, id);
     }
+
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<CareFlow.Domain.Entities.Appointment>>> GetAll()
+    {
+        var result = await _mediator.Send(new CareFlow.Application.Features.Appointments.Queries.GetAppointments.GetAppointmentsQuery());
+        return Ok(result);
+    }
 }

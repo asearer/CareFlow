@@ -23,4 +23,9 @@ public class PatientRepository : IPatientRepository
     {
         await _context.Patients.AddAsync(patient, cancellationToken);
     }
+
+    public async Task<IEnumerable<Patient>> GetAllAsync(CancellationToken cancellationToken)
+    {
+        return await _context.Patients.ToListAsync(cancellationToken);
+    }
 }

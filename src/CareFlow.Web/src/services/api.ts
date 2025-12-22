@@ -23,4 +23,65 @@ api.interceptors.request.use(
     }
 );
 
+// Types
+export interface Patient {
+    id: string;
+    firstName: string;
+    lastName: string;
+    dateOfBirth: string;
+    email: string;
+    phoneNumber: string;
+    address: string;
+}
+
+export interface CreatePatientRequest {
+    firstName: string;
+    lastName: string;
+    dateOfBirth: string;
+    email: string;
+    phoneNumber: string;
+    address: string;
+}
+
+export interface Appointment {
+    id: string;
+    patientId: string;
+    therapistId: string;
+    startTime: string; // ISO
+    endTime: string;   // ISO
+    status: number;
+    patient?: Patient;
+    // therapist?: User; // simplified
+}
+
+export interface CreateAppointmentRequest {
+    patientId: string;
+    therapistId: string;
+    startTime: string;
+    endTime: string;
+}
+
+// Services
+export const PatientService = {
+    getAll: async () => {
+        const response = await api.get<Patient[]>('/Patients');
+        return response.data;
+    },
+    create: async (data: CreatePatientRequest) => {
+        const response = await api.post<string>('/Patients', data);
+        return response.data;
+    }
+};
+
+export const AppointmentService = {
+    getAll: async () => {
+        const response = await api.get<Appointment[]>('/Appointments');
+        return response.data;
+    },
+    create: async (data: CreateAppointmentRequest) => {
+        const response = await api.post<string>('/Appointments', data);
+        return response.data;
+    }
+};
+
 export default api;

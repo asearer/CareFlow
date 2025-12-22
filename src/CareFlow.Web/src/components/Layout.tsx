@@ -19,8 +19,8 @@ export const Layout = () => {
                 <div className={styles.brand}>CareFlow</div>
                 <nav className={styles.nav}>
                     <Link to="/dashboard" className={styles.navLink}>Dashboard</Link>
-                    <Link to="/appointments" className={styles.navLink}>Appointments</Link>
                     <Link to="/patients" className={styles.navLink}>Patients</Link>
+                    <Link to="/appointments" className={styles.navLink}>Appointments</Link>
                 </nav>
                 <div className={styles.userSection}>
                     <div className={styles.userInfo}>
