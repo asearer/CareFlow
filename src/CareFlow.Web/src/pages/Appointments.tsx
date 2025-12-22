@@ -93,9 +93,9 @@ const Appointments = () => {
                     </Card>
                 ) : (
                     appointments.map(apt => (
-                        <Card key={apt.id} title={`${new Date(apt.startTime).toLocaleString()}`} className={styles.patientInfo}>
+                        <Card key={apt.id} title={`${new Date(apt.timeRange.start).toLocaleString()}`} className={styles.patientInfo}>
                             <p><strong>Patient:</strong> {apt.patient?.firstName} {apt.patient?.lastName}</p>
-                            <p><strong>Status:</strong> {apt.status}</p>
+                            <p><strong>Status:</strong> {apt.status === 0 ? 'Scheduled' : 'Completed'}</p>
                         </Card>
                     ))
                 )}

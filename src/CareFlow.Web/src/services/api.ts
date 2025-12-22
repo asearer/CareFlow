@@ -47,8 +47,10 @@ export interface Appointment {
     id: string;
     patientId: string;
     therapistId: string;
-    startTime: string; // ISO
-    endTime: string;   // ISO
+    timeRange: {
+        start: string;
+        end: string;
+    };
     status: number;
     patient?: Patient;
     // therapist?: User; // simplified
