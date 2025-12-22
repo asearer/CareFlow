@@ -12,6 +12,16 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp",
+        builder =>
+        {
+            builder.WithOrigins("http://localhost:3000") // React app
+                   .AllowAnyHeader()
+                   .AllowAnyMethod();
+        });
+});
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "CareFlow API", Version = "v1" });
@@ -44,6 +54,14 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
+// Seed Database
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<CareFlow.Infrastructure.Persistence.ApplicationDbContext>();
+    CareFlow.Api.Data.DbInitializer.Initialize(context);
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -54,6 +72,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseMiddleware<ApiExceptionMiddleware>();
+
+app.UseCors("AllowReactApp");
 
 app.UseAuthentication();
 app.UseAuthorization();

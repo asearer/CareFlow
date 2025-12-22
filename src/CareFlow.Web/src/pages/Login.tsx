@@ -54,6 +54,25 @@ export const Login = () => {
                     <Button type="submit" isLoading={loading} className={styles.submitBtn}>
                         Sign In
                     </Button>
+                    <div style={{ marginTop: '1rem', borderTop: '1px solid var(--color-border)', paddingTop: '1rem' }}>
+                        <Button
+                            type="button"
+                            variant="secondary"
+                            className={styles.submitBtn}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                setEmail('admin@demo.com');
+                                setPassword('DemoPassword123!');
+                                // Auto-submit after state update
+                                setTimeout(() => {
+                                    const submitButton = document.querySelector('button[type="submit"]') as HTMLButtonElement;
+                                    submitButton?.click();
+                                }, 100);
+                            }}
+                        >
+                            Demo Login (Admin)
+                        </Button>
+                    </div>
                 </form>
                 <div className={styles.footer}>
                     Don't have an account? <Link to="/register">Sign Up</Link>
