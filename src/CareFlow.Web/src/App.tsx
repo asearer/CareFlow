@@ -6,6 +6,7 @@ import { Dashboard } from './pages/Dashboard';
 import { Layout } from './components/Layout';
 import Patients from './pages/Patients';
 import Appointments from './pages/Appointments';
+import { AuditLogs } from './pages/AuditLogs';
 import './index.css';
 
 // Protected Route Wrapper
@@ -32,6 +33,7 @@ function App() {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/patients" element={<Patients />} />
               <Route path="/appointments" element={<Appointments />} />
+              <Route path="/audit-logs" element={<AuditLogs />} />
             </Route>
           </Route>
 

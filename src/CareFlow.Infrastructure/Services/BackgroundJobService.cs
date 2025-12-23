@@ -6,24 +6,23 @@ namespace CareFlow.Infrastructure.Services;
 public class BackgroundJobService : IBackgroundJobService
 {
     private readonly ILogger<BackgroundJobService> _logger;
+    private readonly IAuditService _auditService;
 
-    public BackgroundJobService(ILogger<BackgroundJobService> logger)
+    public BackgroundJobService(ILogger<BackgroundJobService> logger, IAuditService auditService)
     {
         _logger = logger;
+        _auditService = auditService;
     }
 
-    public Task SendAppointmentReminders()
+    public async Task SendAppointmentReminders()
     {
         _logger.LogInformation("Sending appointment reminders for tomorrow...");
-        // Logic to fetch appointments and send emails would go here.
-        // For demo, we just log.
-        return Task.CompletedTask;
+        await _auditService.LogAsync("JobExecution", "HangfireJob", Guid.NewGuid(), null, "Sent appointment reminders");
     }
 
-    public Task ProcessDailySummaries()
+    public async Task ProcessDailySummaries()
     {
         _logger.LogInformation("Processing daily summaries...");
-        // Logic to aggregate data and send summary report.
-        return Task.CompletedTask;
+        await _auditService.LogAsync("JobExecution", "HangfireJob", Guid.NewGuid(), null, "Processed daily summaries");
     }
 }

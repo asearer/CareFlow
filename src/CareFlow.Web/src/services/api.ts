@@ -86,4 +86,21 @@ export const AppointmentService = {
     }
 };
 
+export interface AuditLog {
+    id: string;
+    action: string;
+    entityName: string;
+    entityId: string;
+    userId?: string;
+    timestamp: string;
+    details: string;
+}
+
+export const AuditLogService = {
+    getAll: async () => {
+        const response = await api.get<AuditLog[]>('/AuditLogs');
+        return response.data;
+    }
+};
+
 export default api;
