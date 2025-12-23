@@ -10,11 +10,13 @@ public class SignNoteCommandHandler : IRequestHandler<SignNoteCommand, bool>
 {
     private readonly IClinicalNoteRepository _noteRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IAuditService _auditService;
 
-    public SignNoteCommandHandler(IClinicalNoteRepository noteRepository, IUnitOfWork unitOfWork)
+    public SignNoteCommandHandler(IClinicalNoteRepository noteRepository, IUnitOfWork unitOfWork, IAuditService auditService)
     {
         _noteRepository = noteRepository;
         _unitOfWork = unitOfWork;
+        _auditService = auditService;
     }
 
     public async Task<bool> Handle(SignNoteCommand command, CancellationToken cancellationToken)
@@ -31,6 +33,14 @@ public class SignNoteCommandHandler : IRequestHandler<SignNoteCommand, bool>
         }
 
         note.Sign();
+        
+        await _auditService.LogAsync(
+            action: "SignNote",
+            entityName: "ClinicalNote",
+            entityId: note.Id,
+            userId: command.TherapistId,
+            details: "Note signed and finalized.");
+
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return true;

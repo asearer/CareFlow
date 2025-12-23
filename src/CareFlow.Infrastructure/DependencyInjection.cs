@@ -25,9 +25,12 @@ public static class DependencyInjection
         services.AddScoped<IPatientRepository, PatientRepository>();
         services.AddScoped<IAppointmentRepository, AppointmentRepository>();
         services.AddScoped<IClinicalNoteRepository, ClinicalNoteRepository>();
+        services.AddScoped<IAuditLogRepository, AuditLogRepository>();
 
         services.AddScoped<IPasswordHasher, PasswordHasher>();
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+        services.AddScoped<IAuditService, AuditService>();
+        services.AddScoped<IBackgroundJobService, BackgroundJobService>();
 
         // Hangfire Configuration
         services.AddHangfire(config => config

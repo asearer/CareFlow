@@ -13,11 +13,13 @@ public class CreateAppointmentCommandHandler : IRequestHandler<CreateAppointment
 {
     private readonly IAppointmentRepository _appointmentRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IAuditService _auditService;
 
-    public CreateAppointmentCommandHandler(IAppointmentRepository appointmentRepository, IUnitOfWork unitOfWork)
+    public CreateAppointmentCommandHandler(IAppointmentRepository appointmentRepository, IUnitOfWork unitOfWork, IAuditService auditService)
     {
         _appointmentRepository = appointmentRepository;
         _unitOfWork = unitOfWork;
+        _auditService = auditService;
     }
 
     public async Task<Guid> Handle(CreateAppointmentCommand command, CancellationToken cancellationToken)
@@ -42,6 +44,14 @@ public class CreateAppointmentCommandHandler : IRequestHandler<CreateAppointment
         );
 
         await _appointmentRepository.AddAsync(appointment, cancellationToken);
+        
+        await _auditService.LogAsync(
+            action: "CreateAppointment",
+            entityName: "Appointment",
+            entityId: appointment.Id,
+            userId: command.Request.TherapistId,
+            details: $"Scheduled appointment for {timeRange.Start}");
+
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return appointment.Id;

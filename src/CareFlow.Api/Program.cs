@@ -2,6 +2,7 @@ using CareFlow.Application;
 using CareFlow.Infrastructure;
 using CareFlow.Api.Middleware;
 using Hangfire;
+using CareFlow.Application.Common.Interfaces;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -73,6 +74,21 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 var app = builder.Build();
+
+// Register Recurring Jobs
+using (var scope = app.Services.CreateScope())
+{
+    var recurringJobManager = scope.ServiceProvider.GetRequiredService<IRecurringJobManager>();
+    recurringJobManager.AddOrUpdate<IBackgroundJobService>(
+        "appointment-reminders", 
+        service => service.SendAppointmentReminders(), 
+        Cron.Daily);
+
+    recurringJobManager.AddOrUpdate<IBackgroundJobService>(
+        "daily-summaries", 
+        service => service.ProcessDailySummaries(), 
+        Cron.Daily(18)); // 6 PM
+}
 
 // Seed Database
 using (var scope = app.Services.CreateScope())

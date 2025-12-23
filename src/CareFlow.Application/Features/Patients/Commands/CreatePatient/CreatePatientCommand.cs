@@ -1,4 +1,5 @@
 using CareFlow.Domain.Entities;
+using CareFlow.Application.Common.Interfaces;
 using CareFlow.Domain.Interfaces;
 using FluentValidation;
 using MediatR;
@@ -30,11 +31,13 @@ public class CreatePatientCommandHandler : IRequestHandler<CreatePatientCommand,
 {
     private readonly IPatientRepository _patientRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IAuditService _auditService;
 
-    public CreatePatientCommandHandler(IPatientRepository patientRepository, IUnitOfWork unitOfWork)
+    public CreatePatientCommandHandler(IPatientRepository patientRepository, IUnitOfWork unitOfWork, IAuditService auditService)
     {
         _patientRepository = patientRepository;
         _unitOfWork = unitOfWork;
+        _auditService = auditService;
     }
 
     public async Task<Guid> Handle(CreatePatientCommand request, CancellationToken cancellationToken)
@@ -48,6 +51,14 @@ public class CreatePatientCommandHandler : IRequestHandler<CreatePatientCommand,
             request.Address);
 
         await _patientRepository.AddAsync(patient, cancellationToken);
+        
+        await _auditService.LogAsync(
+            action: "CreatePatient",
+            entityName: "Patient",
+            entityId: patient.Id,
+            userId: null, // In a real app we'd get this from CurrentUserService
+            details: $"Created patient {patient.FirstName} {patient.LastName}");
+
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return patient.Id;

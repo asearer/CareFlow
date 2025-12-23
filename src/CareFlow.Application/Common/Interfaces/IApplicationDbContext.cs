@@ -9,6 +9,7 @@ public interface IApplicationDbContext
     DbSet<Patient> Patients { get; }
     DbSet<Appointment> Appointments { get; }
     DbSet<ClinicalNote> ClinicalNotes { get; }
+    DbSet<AuditLog> AuditLogs { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

@@ -15,6 +15,7 @@ public class ApplicationDbContext : DbContext, IUnitOfWork
     public DbSet<Patient> Patients { get; set; }
     public DbSet<Appointment> Appointments { get; set; }
     public DbSet<ClinicalNote> ClinicalNotes { get; set; }
+    public DbSet<AuditLog> AuditLogs { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
