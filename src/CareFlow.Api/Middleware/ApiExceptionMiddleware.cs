@@ -28,27 +28,55 @@ public class ApiExceptionMiddleware
         }
     }
 
-    private static Task HandleExceptionAsync(HttpContext context, Exception exception)
+    private static async Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
-        var statusCode = HttpStatusCode.InternalServerError;
-        var result = "Internal Server Error";
+        var statusCode = StatusCodes.Status500InternalServerError;
+        var title = "An error occurred while processing your request.";
+        IDictionary<string, object?>? extensions = null;
 
         switch (exception)
         {
+            case ValidationException validationEx:
+                statusCode = StatusCodes.Status400BadRequest;
+                title = "Validation Failed";
+                extensions = new Dictionary<string, object?>
+                {
+                    { "errors", validationEx.Errors }
+                };
+                break;
             case DomainException domainEx:
-                statusCode = HttpStatusCode.BadRequest;
-                result = domainEx.Message;
+                statusCode = StatusCodes.Status400BadRequest;
+                title = domainEx.Message;
                 break;
             case UnauthorizedAccessException:
-                statusCode = HttpStatusCode.Unauthorized;
-                result = "Unauthorized";
+                statusCode = StatusCodes.Status401Unauthorized;
+                title = "Unauthorized";
                 break;
-                // Add more custom exceptions here
+            case KeyNotFoundException:
+                statusCode = StatusCodes.Status404NotFound;
+                title = "Resource Not Found";
+                break;
         }
 
-        context.Response.ContentType = "application/json";
-        context.Response.StatusCode = (int)statusCode;
+        context.Response.ContentType = "application/problem+json";
+        context.Response.StatusCode = statusCode;
 
-        return context.Response.WriteAsync(JsonSerializer.Serialize(new { error = result }));
+        var problemDetails = new Microsoft.AspNetCore.Mvc.ProblemDetails
+        {
+            Status = statusCode,
+            Title = title,
+            Detail = exception.Message,
+            Instance = context.Request.Path
+        };
+
+        if (extensions != null)
+        {
+            foreach (var ext in extensions)
+            {
+                problemDetails.Extensions.Add(ext.Key, ext.Value);
+            }
+        }
+
+        await context.Response.WriteAsJsonAsync(problemDetails);
     }
 }

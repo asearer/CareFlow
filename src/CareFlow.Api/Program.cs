@@ -4,12 +4,40 @@ using CareFlow.Api.Middleware;
 using Hangfire;
 using CareFlow.Application.Common.Interfaces;
 using Microsoft.OpenApi.Models;
+using Serilog;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Threading.RateLimiting;
+using CareFlow.Api.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configure Serilog
+builder.Host.UseSerilog((context, configuration) => 
+    configuration.ReadFrom.Configuration(context.Configuration));
 
 // Add services to the container.
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+
+builder.Services.AddInfrastructure(builder.Configuration);
+
+builder.Services.AddHealthChecks()
+    .AddNpgSql(builder.Configuration.GetConnectionString("DefaultConnection")!);
+
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: httpContext.User.Identity?.Name ?? httpContext.Request.Headers.Host.ToString(),
+            factory: partition => new FixedWindowRateLimiterOptions
+            {
+                AutoReplenishment = true,
+                PermitLimit = 1000,
+                QueueLimit = 0,
+                Window = TimeSpan.FromMinutes(1)
+            }));
+});
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -107,7 +135,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseHttpsRedirection();
+
+app.UseSerilogRequestLogging();
+
 app.UseMiddleware<ApiExceptionMiddleware>();
+
+app.UseRateLimiter();
 
 app.UseCors("AllowReactApp");
 
@@ -117,9 +151,12 @@ app.UseAuthorization();
 app.MapControllers();
 
 // Hangfire Dashboard
-app.UseHangfireDashboard();
+app.UseHangfireDashboard("/hangfire", new DashboardOptions
+{
+    Authorization = new [] { new HangfireAuthorizationFilter() }
+});
 
 // Basic health check
-app.MapGet("/health", () => "CareFlow API is running!");
+app.MapHealthChecks("/health");
 
 app.Run();
